@@ -1,16 +1,23 @@
-name: Add comment
+name: Send Hello Email
+
 on:
-  issues:
-    types: [opened]
+  workflow_dispatch:
+
 jobs:
-  add-comment:
-    if: github.event.issue.body == 'Hello'
+  send_email:
     runs-on: ubuntu-latest
     steps:
-      - name: Add comment
-        run: gh issue comment "$NUMBER" --body "$GREETING"
-        env:
-          GH_TOKEN: ${{ secrets.EMAIL }}
-          GH_REPO: ${{ github.repository }}
-          NUMBER: ${{ github.event.issue.number }}
-          GREETING: "Hello to you too! :sparkles::sparkles::sparkles:"
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Send Email Notification
+        uses: vaighai/action-send-mail@v3
+        with:
+          server_address: smtp.example.com
+          server_port: 587
+          username: ${{ secrets.EMAIL }}
+          password: ${{ secrets.EMAIL }}
+          to: vaighaiselvan.k@crestron.com
+          from: ${{ secrets.EMAIL }}
+          subject: Hello from GitHub Actions
+          body: Hello! This is a test email sent by a GitHub Actions workflow.
